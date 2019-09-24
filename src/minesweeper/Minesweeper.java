@@ -1,6 +1,7 @@
 /*
  *  This is a template for CS335 HW1 : MineSweeper
  * You need to add more codes to complete this program 
+ * @author Jesse
  */
 
 package minesweeper;

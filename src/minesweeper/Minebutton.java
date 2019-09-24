@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.lang.Class;
 /**
  *
- * @author Jordan
+ * @author Jesse
  */
 public class Minebutton extends JButton{
     private boolean btnHasMine = false; //if true, button contains a mine
