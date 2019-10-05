@@ -27,20 +27,19 @@ public class Minesweeper extends JFrame {
     private boolean inprogress; //flag whether game is in progress or not
     private Minebutton[][] buttons; //array of all squares on board
     private static JMenuBar topMenu = new JMenuBar(); //menu bar
-    private JMenu gameMenu = new JMenu("Game"); //"Game" menu
-    private JMenu helpMenu = new JMenu("Help"); //"Help" menu
-    private JMenuItem newGame= new JMenuItem("New game"); //starts a new game
-    private JMenuItem easy = new JMenuItem("Easy (10x10 board, 5 mines)");
-    private JMenuItem medium = new JMenuItem("Medium (20x20 board, 30 mines)");
-    private JMenuItem hard = new JMenuItem("Hard (30x30 board, 100 mines)");
-    private JMenuItem insane = new JMenuItem("Insane (30x30 board, 250 mines)");
-    private JMenuItem exit=new JMenuItem("Exit"); //exits program
-    private JMenuItem about = new JMenuItem("About"); //displays program info
+    private JMenu gameMenu = new JMenu("Game");
+    private JMenu helpMenu = new JMenu("Help");
+    private JMenuItem newGame= new JMenuItem("New game");
+    private JMenuItem beginner = new JMenuItem("Beginner (10x10 board, 5 mines)");
+    private JMenuItem advanced = new JMenuItem("Advanced (20x20 board, 30 mines)");
+    private JMenuItem expert = new JMenuItem("Expert (30x30 board, 100 mines)");
+    private JMenuItem custom = new JMenuItem("Custom (30x30 board, 250 mines)");
+    private JMenuItem exit=new JMenuItem("Exit");
     private JButton smiley = new JButton(); //Status smiley at top of screen
-    private ImageIcon smileyglasses = new ImageIcon(getClass().getResource("/images/sunglasses.png")); //smiley won icon
-    private ImageIcon smileyface = new ImageIcon(getClass().getResource("/images/smiley.png")); //regular smiley icon
-    private ImageIcon smileydead = new ImageIcon(getClass().getResource("/images/deadsmiley.png"));//smiley lose icon
-    private ImageIcon displayZero = new ImageIcon(getClass().getResource("/images/displayzero.png"));//digit icons for timer and mine counter
+    private ImageIcon smileyglasses = new ImageIcon(getClass().getResource("/images/sunglasses.png"));
+    private ImageIcon smileyface = new ImageIcon(getClass().getResource("/images/smiley.png"));
+    private ImageIcon smileydead = new ImageIcon(getClass().getResource("/images/deadsmiley.png"));
+    private ImageIcon displayZero = new ImageIcon(getClass().getResource("/images/displayzero.png"));
     private ImageIcon displayOne = new ImageIcon(getClass().getResource("/images/displayone.png"));
     private ImageIcon displayTwo = new ImageIcon(getClass().getResource("/images/displaytwo.png"));
     private ImageIcon displayThree = new ImageIcon(getClass().getResource("/images/displaythree.png"));
@@ -193,7 +192,7 @@ public class Minesweeper extends JFrame {
                 showAbout();
             }
         });
-        easy.addActionListener(new ActionListener()
+        beginner.addActionListener(new ActionListener()
         {
            public void actionPerformed(ActionEvent e)
            {
@@ -201,7 +200,7 @@ public class Minesweeper extends JFrame {
            }
 
         });
-        medium.addActionListener(new ActionListener()
+        advanced.addActionListener(new ActionListener()
         {
            public void actionPerformed(ActionEvent e)
            {
@@ -209,7 +208,7 @@ public class Minesweeper extends JFrame {
            }
 
         });
-        hard.addActionListener(new ActionListener()
+        expert.addActionListener(new ActionListener()
         {
            public void actionPerformed(ActionEvent e)
            {
@@ -267,10 +266,6 @@ public class Minesweeper extends JFrame {
         nMines = newnMines;
         this.setContentPane( new JPanel( new BorderLayout() ) );
         this.addComponentsToPane(this.getContentPane());
-        //Display the window.
-        this.pack();
-        this.revalidate();
-        this.repaint();
         this.startNewGame();
     }
 
@@ -367,24 +362,19 @@ public class Minesweeper extends JFrame {
         JOptionPane.showMessageDialog(this,  "Minesweeper for CS 335 by Elijah Jordan Montgomery\n<elijah.montgomery@uky.edu>\nVersion: "+versionString, "About Minesweeper", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void win()//stops game and timer upon user win
-    {
+    private void win() {
         inprogress = false;
         mineTimer.cancel();
         smiley.setIcon(smileyglasses);
     }
 
-    private void lose()//stops game and timer upon user lose
-    {
+    private void lose() {
         mineTimer.cancel();
         inprogress = false;
-        smiley.setIcon(smileydead);//smiley has died :(
-        for(int x=0;x<length;x++)//display all hidden mines as grey mines
-        {
-            for(int y=0;y<width;y++)
-            {
-                if(buttons[x][y].isMine() && buttons[x][y].isCovered())
-                {
+        smiley.setIcon(smileydead);
+        for(int x=0;x<length;x++) {
+            for(int y=0;y<width;y++) {
+                if(buttons[x][y].isMine() && buttons[x][y].isCovered()) {
                     buttons[x][y].setGreyMine();
                 }
             }
@@ -427,7 +417,7 @@ public class Minesweeper extends JFrame {
         frame.pack();
         frame.setVisible(true);
     }
-    
+
     private void startNewGame() {//resets all objects to beginning of game states, redistributes mines and recalculates minecounts
         mineTimer.cancel();
         mineTimer = new Timer(false);

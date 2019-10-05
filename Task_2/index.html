@@ -1,0 +1,297 @@
+<head>
+	<title>HexMines_Jesse</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 80%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.outer-div
+{
+     padding: 1px;
+     text-align: center;
+}
+.inner-div
+{
+     display: inline-block;
+     padding: 20px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<script>
+
+function Shuffle(o) {
+	for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+	return o;
+};
+
+colors={
+	0:'#eeeeee',
+	1:'#0000ff',
+	2:'#339933',
+	3:'#ff0000',
+	4:'#000066',
+	5:'#800000',
+	6:'#006666',
+	7:'#000000' }
+
+function addv(a,b){
+	c=[];
+	for (var i0=0; i0<a.length; i0++){
+		c.push(a[i0]+b[i0]);
+	}
+	return c;
+}
+
+function mult(a,k){
+	c=[];
+	for (var i0=0; i0<a.length; i0++){
+		c.push(a[i0]*k);
+	}
+	return c;
+}
+
+
+function restart(){
+	stop();
+	document.getElementById('alive').value='1';
+	document.getElementById('message').innerHTML='';
+	document.getElementById("timer").innerHTML='0';
+	var n = parseInt(document.getElementById("n").value);
+	var s=0;
+
+	var gaps=1.0;
+
+	var h=280/((1.5*n-0.5)*gaps);   //40
+	var b=324/((2*n-1)*gaps)   //100/((2*n-1)*gaps);   //36
+	var hex00 = [0,h/4,b/2,0,b,h/4,b,3*h/4,b/2,h,0,3*h/4];
+	var hex;
+	var i_vector= mult([-b/2,3*h/4,-b/2,3*h/4,-b/2,3*h/4,-b/2,3*h/4,-b/2,3*h/4,-b/2,3*h/4],gaps);
+	var j_vector= mult([b,0,b,0,b,0,b,0,b,0,b,0],gaps);
+
+	//var text = '<svg width="'+(2*n-1)*b*gaps+'" height="'+h*(1+3*(n-1)/2)*gaps+'">';
+	var text = '<svg width="'+324+'" height="'+280+'">'  //<text id="t" x="0" y="15" fill="#0000ff">1</text>';
+	text=text+'<style>.heavy { font: bold '+20*5/n+'px Arial; fill: white}</style>';
+
+	var hex00_p=addv((hex00),mult(j_vector,(n-1)/2));  //set position first hexagon
+
+	for (var i = 0; i < 2*n-1 ; i++) {
+		for (var j = Math.max(0,i-(n-1));j < Math.min(n+i,2*n-1); j++) {
+	  		hex=addv((hex00_p),mult(j_vector,j));
+	  		hex=addv(hex,mult(i_vector,i));
+	  		points=hex.toString();
+	  		text=text+'<g id="g_'+[i,j].toString()+'" onclick="game(['+[i,j].toString()+'])"> <polygon class="hex" clicked=0 mined=-1 id="'+[i,j].toString()+'" points="'+ points +'" style="fill:#aaaaaa;stroke:purple;stroke-width:'+(5/n).toString()+'" /> <text x="'+(hex[4]*0.3+hex[10]*0.7)+'" y="'+(hex[5]*0.25+hex[11]*0.75)+'" type="hidden" id="t_'+[i,j].toString()+'" class="heavy"></text> </g>';
+	  		// text = text+ '<polygon class="hex" clicked=0 mined=-1 id="'+[i,j].toString()+' "points="'+ points +'" style="fill:#aaaaaa;stroke:purple;stroke-width:1" onclick="game(['+[i,j].toString()+'])" />';
+
+	  		// text = text+'<text x="'+(parseInt(hex[0])+parseInt(hex[6]))/2+'" y="'+(hex[1]+hex[7])/2+'" id="t'+[i,j].toString()+' class="heavy" onclick="game(['+[i,j].toString()+'])">9</text>';
+	  		// s+=1;
+	  		// //console.log(i,j);
+	  	}
+	}
+	text+='</svg>'
+	document.getElementById("demo").innerHTML = text;
+	//document.getElementById("nbombs").value=n*(n-1)*3/5;
+	//document.getElementById("nbombs").setAttribute('max',n*(n-1)*3);
+}
+
+function valid(pos,n){
+	var x=pos[0];
+	var y=pos[1];
+	if ((x>-1)&&(x<2*n-1)){
+		if ((y>Math.max(0,x-(n-1))-1)&&(y<Math.min(n+x,2*n-1))){
+			return true;
+		}
+	}
+	return false;
+}
+
+function game(pos){
+	if (document.getElementById('alive').value=='0'){
+		return 0;
+	}
+	else{
+		var n=parseInt(document.getElementById("n").value);
+		//console.log(pos);
+		let cell = document.getElementById(pos.toString());
+		if (parseInt(cell.getAttribute('mined'))==-1){
+			var start_config=[];
+			var nbombs=document.getElementById("nbombs").value;
+			for (var i0=0;i0<n*(n-1)*3;i0++){
+				if (i0<nbombs){
+					start_config.push(1);
+				}
+				else{
+					start_config.push(0);
+				}
+			}
+			start_config=Shuffle(start_config);
+			var skip=0;
+			cell.setAttribute('mined',0);
+			for (var i0=0;i0<start_config.length; i0++){
+				if (document.getElementsByClassName('hex')[i0].id==pos){
+					skip=1;
+				}
+				document.getElementsByClassName('hex')[i0+skip].setAttribute('mined',start_config[i0]);
+			}
+			document.getElementById('to_go').value=(n*(n-1)*3+1-nbombs).toString();
+			start();
+		}
+		if (parseInt(cell.getAttribute('mined'))==1){
+			for (var i0=0;i0<document.getElementsByClassName('hex').length; i0++){
+				if (document.getElementsByClassName('hex')[i0].getAttribute('mined')==1){
+					document.getElementsByClassName('hex')[i0].style.fill=colors['7'];
+				}
+			}
+			document.getElementById('alive').value='0';
+			document.getElementById('message').innerHTML='Game Over! Try again.';
+			stop();
+		}
+		if ((parseInt(cell.getAttribute('mined'))==0)&&(parseInt(cell.getAttribute('clicked'))==0)){
+			cell.setAttribute('clicked',1);
+			document.getElementById('to_go').value=document.getElementById('to_go').value-1;
+			var surr=0;
+			list_neighs=[[-1,-1],[-1,0],[0,-1],[0,1],[1,0],[1,1]];
+			for (var i1=0; i1<6; i1++) {
+				var candidate=addv(pos,list_neighs[i1]);
+				if (valid(candidate,n)){
+					//console.log(candidate.toString());
+					surr+=parseInt(document.getElementById(candidate.toString()).getAttribute('mined'));
+				}
+			}
+			cell.style.fill=colors[surr];
+			if (surr!=0){
+				document.getElementById('t_'+pos.toString()).innerHTML=surr;
+			}
+			if (surr==0){
+				for (var i1=0; i1<6; i1++) {
+					candidate=addv(pos,list_neighs[i1]);
+					if (valid(candidate,n)){
+						if (document.getElementById(candidate.toString()).getAttribute('clicked')==0){
+							document.getElementById('g_'+candidate.toString()).onclick();
+						}
+					}
+				}
+			}
+		}
+		if (parseInt(document.getElementById('to_go').value)<1){
+			document.getElementById('message').innerHTML='CONGRATULATIONS, YOU WON!!';
+			document.getElementById('alive').value='0';
+			stop();
+		}
+	}
+	return 0;
+
+		//cell.setAttribute('mine',parseInt(cell.getAttribute('mines'))+1);
+}
+
+document.getElementsByClassName("hex").onclick = function() {game()};
+
+</script>
+
+<div class="outer-div">
+	<svg height="40" width="300">
+		  	<style>
+    		.big { font: bold 22px Times;}
+    		</style>
+  		<text x="0" y="30" fill="black" class='big'>Chenlei Tao (Jesse) s5108596</text>
+  	</svg><br>
+  	<div class="inner-div" id="demo"></div>
+</div>
+
+
+<div>
+	<p id='message'></p>
+	<button onclick="restart()">New Game</button>
+	<p>Size of Hex Minesweeper: <input type="number" id="n" min=2 value=5></p>
+	<p>Number of mines: <span id="demo2"></span></p>
+</div>
+
+<div class="slidecontainer">
+	<input type="range" min="1" max="60" value="12" class="slider" id="nbombs">
+</div>
+<div>
+	<p>Total number of cells: <span id="nhexs">61</span></p>
+	<p>Time: <span id='timer'>0</span> seconds.</p>
+</div>
+
+
+<input type="hidden" id="alive" value='1'>
+<input type="hidden" id="to_go" >
+
+<script>
+	var slider = document.getElementById("nbombs");
+	var n = document.getElementById("n");
+	var output = document.getElementById("demo2");
+	var nhexs = document.getElementById("nhexs");
+
+	output.innerHTML = slider.value;
+
+	slider.oninput = function() {
+		output.innerHTML = this.value;
+	}
+	n.oninput = function(){
+		slider.setAttribute('max',3*n.value*(n.value-1));
+		nhexs.innerHTML = 3*n.value*(n.value-1)+1;
+		slider.value=3*n.value*(n.value-1)/5;
+		output.innerHTML = slider.value;
+		restart();
+	}
+
+window.onload = function() {
+	restart();
+};
+
+function changeValue() {
+  document.getElementById("timer").innerHTML = ++value;
+}
+
+var timerInterval = null;
+function start() {
+  stop(); // stoping the previous counting (if any)
+  value = 0;
+  timerInterval = setInterval(changeValue, 1000);
+}
+var stop = function() {
+  clearInterval(timerInterval);
+}
+
+</script>
+<h6>HexMinesweeper for 7805ICT milestone 3.</h6>
+</body>
