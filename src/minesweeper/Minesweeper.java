@@ -1,6 +1,6 @@
 /*
  *  This is a template for CS335 HW1 : MineSweeper
- * You need to add more codes to complete this program
+ * You need to add more codes to complete this program 
  * @author Jesse
  */
 
@@ -62,36 +62,36 @@ public class Minesweeper extends JFrame {
     Timer mineTimer = new Timer(true); //Timer object to update timer
 
     //You can set the size you want for GridLayout
-
+    
     public Minesweeper(String name) {
         super(name);
         setResizable(false);
     }
-
-
+    
+    
     private void addComponentsToPane(final Container pane) {
         nFlags = nMines;
         final JPanel timer = new JPanel(); //timer at top of screen
         final JPanel minesCount = new JPanel(); //mine counter at top of screen
-
+        
         timer.setLayout(new BorderLayout()); //setup timer display
         timer.add(timerHundreds, BorderLayout.WEST);
         timer.add(timerTens,BorderLayout.CENTER);
         timer.add(timerOnes,BorderLayout.EAST);
-
+        
         minesCount.setLayout(new BorderLayout()); //setup mine counter display
         minesCount.add(mineHundreds, BorderLayout.WEST);
         minesCount.add(mineTens, BorderLayout.CENTER);
         minesCount.add(mineOnes, BorderLayout.EAST);
-
+        
         updateMineCount();//update display values
         updateTimer();
-
+        
         final JPanel topPanel = new JPanel(); //setup panel for counters and smiley
         topPanel.setLayout(new BorderLayout());
         JPanel mineGrid = new JPanel();//setup panel for buttons
         mineGrid.setLayout(new GridLayout(length,width));
-
+        
         buttons = new Minebutton[length][width]; //array to store all buttons in an easily-accessible way
         Minebutton b = new Minebutton(-1,-1);//temp button to help determine window size
         Dimension buttonSize = b.getMinimumSize();
@@ -139,7 +139,7 @@ public class Minesweeper extends JFrame {
                                 {
                                     win();
                                 }
-
+                            
                             }
                         }
                         }
@@ -165,15 +165,15 @@ public class Minesweeper extends JFrame {
                                 }
                             }
                      }
-
+                    
                 });
                 mineGrid.add(buttons[x][y]);//add mine squares to grid
             }
         }
         placeMines();//add mines to the grid
         countMines();//add mine counts to each square
-
-
+        
+        
         //Add listeners to menu to start new game, exit game or show info
         newGame.addActionListener(new ActionListener()
                 {
@@ -199,7 +199,7 @@ public class Minesweeper extends JFrame {
            {
                resetDifficulty(10,10,5);
            }
-
+            
         });
         medium.addActionListener(new ActionListener()
         {
@@ -207,7 +207,7 @@ public class Minesweeper extends JFrame {
            {
                resetDifficulty(20,20,30);
            }
-
+            
         });
         hard.addActionListener(new ActionListener()
         {
@@ -215,7 +215,7 @@ public class Minesweeper extends JFrame {
            {
                resetDifficulty(30,30,100);
            }
-
+            
         });
         insane.addActionListener(new ActionListener()
         {
@@ -223,7 +223,7 @@ public class Minesweeper extends JFrame {
            {
                resetDifficulty(30,30,250);
            }
-
+            
         });
         gameMenu.add(newGame); //build menu
         gameMenu.add(easy);
@@ -239,7 +239,7 @@ public class Minesweeper extends JFrame {
         smiley.setIcon(smileyface); //create "smiley" button and add listener
         smiley.setBorder(null);//set smiley to only show icon
         smiley.setMaximumSize(new Dimension(smileyface.getIconHeight(),smileyface.getIconWidth()));
-        smiley.setOpaque(false);
+        smiley.setOpaque(false); 
         smiley.setContentAreaFilled(false);
         smiley.setBorderPainted(false);
         smiley.addActionListener(new ActionListener()//new game on smiley click
@@ -256,12 +256,14 @@ public class Minesweeper extends JFrame {
         pane.add(mineGrid, BorderLayout.SOUTH);
         inprogress = true; //start game
     }
-
-    private void loadImages() {
-
+    
+    private void loadImages()
+    {
+        
     }
-
-    private void resetDifficulty(int newLength, int newWidth, int newnMines) {
+    
+    private void resetDifficulty(int newLength, int newWidth, int newnMines)
+    {
         length = newLength;
         width = newWidth;
         nMines = newnMines;
@@ -273,7 +275,6 @@ public class Minesweeper extends JFrame {
         this.repaint();
         this.startNewGame();
     }
-
     private class updateTimerTask extends TimerTask //Task to keep timer updating
     {
         public void run()
@@ -282,7 +283,6 @@ public class Minesweeper extends JFrame {
                 updateTimer();
         }
     }
-
     private void updateTimer() //update timer graphically
     {
         char hundreds, tens, ones;
@@ -296,12 +296,11 @@ public class Minesweeper extends JFrame {
         {
             hundreds = tens = ones = '9';
         }
-
+        
         setDisplayLabel(timerHundreds, hundreds);
         setDisplayLabel(timerTens, tens);
         setDisplayLabel(timerOnes, ones);
     }
-
     private void updateMineCount() //set mine counter graphically
     {
         if(nFlags >= 0)
@@ -322,9 +321,8 @@ public class Minesweeper extends JFrame {
             setDisplayLabel(mineTens, tens);
             setDisplayLabel(mineOnes, ones);
         }
-
+        
     }
-
     private void setDisplayLabel(JLabel label, char num)//used by updateMines and updateTimer to determine icons for labels
     {
         switch(num) {//this seems weird but is determining label based on ASCII value
@@ -358,22 +356,19 @@ public class Minesweeper extends JFrame {
             default://default to label 9
                 label.setIcon(displayNine);
                 break;
-
+                
         }
     }
-
     private void showAbout()//show about dialog
     {
         JOptionPane.showMessageDialog(this,  "Minesweeper for CS 335 by Elijah Jordan Montgomery\n<elijah.montgomery@uky.edu>\nVersion: "+versionString, "About Minesweeper", JOptionPane.INFORMATION_MESSAGE);
     }
-
     private void win()//stops game and timer upon user win
     {
         inprogress = false;
         mineTimer.cancel();
         smiley.setIcon(smileyglasses);
     }
-
     private void lose()//stops game and timer upon user lose
     {
         mineTimer.cancel();
@@ -390,7 +385,6 @@ public class Minesweeper extends JFrame {
             }
         }
     }
-
     private boolean hasWon()//check if user has won - true if only squares left uncovered are mines
     {
         if(!(inprogress))//do nothing if game is not in progress
@@ -409,8 +403,8 @@ public class Minesweeper extends JFrame {
         }
         return true;
     }
-
-
+    
+    
     /**
      * Create the GUI and show it.  For thread safety,
      * this method is invoked from the
@@ -427,7 +421,6 @@ public class Minesweeper extends JFrame {
         frame.pack();
         frame.setVisible(true);
     }
-    
     private void startNewGame() {//resets all objects to beginning of game states, redistributes mines and recalculates minecounts
         mineTimer.cancel();
         mineTimer = new Timer(false);
@@ -447,14 +440,14 @@ public class Minesweeper extends JFrame {
         smiley.setIcon(smileyface);
         timerStarted = false;
         inprogress = true;
-
+        
     }
-
+    
     private void cascade( Minebutton target) {
         /* Poor man's implementation of Microsoft's Cascade algorithm
          * Microsoft implementation described at http://www.techuser.net/minecascade.html
          * I couldn't get their exact algorithm to work right, so this one
-         * recursively visits all adjacent squares cascading through and
+         * recursively visits all adjacent squares cascading through and 
          * uncovering the blanks and edge squares
          */
         if(target.getVisited() == true || target.isFlagged())//do nothing if already visited this square
@@ -488,7 +481,7 @@ public class Minesweeper extends JFrame {
                            cascade(buttons[x-1][y+1]);
                        }
                    }
-
+                   
                }
                if((y-1) != -1)
                {
@@ -527,8 +520,8 @@ public class Minesweeper extends JFrame {
                }
             }
     }
-
-
+    
+    
     public static void main(String[] args) {
         /* Use an appropriate Look and Feel */
         try {
@@ -545,7 +538,7 @@ public class Minesweeper extends JFrame {
         }
         /* Turn off metal's use of bold fonts */
         UIManager.put("swing.boldMetal", Boolean.FALSE);
-
+        
         //display GUI
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -581,7 +574,7 @@ public class Minesweeper extends JFrame {
                            nmines++;
                        }
                    }
-
+                   
                }
                if((y-1) != -1)
                {

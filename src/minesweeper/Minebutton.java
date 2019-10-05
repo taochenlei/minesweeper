@@ -11,10 +11,10 @@ import java.lang.Class;
  * @author Jesse
  */
 public class Minebutton extends JButton{
-    private boolean btnHasMine = false;
-    private int mineCount = 0;
-    private boolean covered = true;
-    private int x;
+    private boolean btnHasMine = false; //if true, button contains a mine
+    private int mineCount = 0; //Count of adjacent mines
+    private boolean covered = true; //is true until player clicks the button
+    private int x; 
     private int y;
     private boolean visited = false;
     private final static ImageIcon mine = new ImageIcon(Minebutton.class.getResource("/images/mine.png")); // possible icons
@@ -30,15 +30,15 @@ public class Minebutton extends JButton{
     private final static ImageIcon blank = new ImageIcon(Minebutton.class.getResource("/images/blank.png"));
     private final static ImageIcon coveredIcon = new ImageIcon(Minebutton.class.getResource("/images/covered.png"));
     private final static ImageIcon greymine = new ImageIcon(Minebutton.class.getResource("/images/greymine.png"));
-
+    
 
     @Override
     protected int checkHorizontalKey(int i, String string) {
         return super.checkHorizontalKey(i, string);
     }
     private boolean flagged = false; //true if flag is on button
-
-
+    
+    
     public void visit()//visit - used for Cascade() in Minesweeper.java
     {
         visited = true;
@@ -72,7 +72,8 @@ public class Minebutton extends JButton{
             this.setIcon(flag);
         }
     }
-    public boolean isFlagged() {
+    public boolean isFlagged()
+    {
         return flagged;
     }
     public void unvisit()//unvisit - used for Cascade() in Minesweeper.java
@@ -90,23 +91,25 @@ public class Minebutton extends JButton{
     {
         btnHasMine=true;
     }
-    public int getXcoord() {
+    public int getXcoord()//x coord in grid
+    {
         return x;
     }
-    public int getYcoord() {
+    public int getYcoord()//y coord in grid
+    {
         return y;
     }
-
+    
     public int getMineCount() {
         return mineCount;
     }
-
+    
     public boolean isCovered()//true if square is covered
     {
         return covered;
     }
-
-    public boolean isMine(){
+    
+    public boolean isMine(){//true if square is a mine
         return btnHasMine;
     }
     public void setCount(int count)//set mine count
@@ -153,10 +156,10 @@ public class Minebutton extends JButton{
                 case 8:
                     this.setIcon(eight);
                     break;
-
-
+                
+             
             }
         }
-
+        
     }
 }
